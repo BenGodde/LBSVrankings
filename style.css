@@ -1,0 +1,88 @@
+:root {
+  --primary: #2e7d32;
+  --secondary: #f5b700;
+  --light-green: #a5d6a7;
+  --white: #ffffff;
+  --bg: #f4f6f8;
+  --text: #222;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--primary);
+  color: var(--white);
+}
+
+.logo {
+  height: 48px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 1rem;
+  background: var(--white);
+  border-bottom: 3px solid var(--primary);
+}
+
+.controls select {
+  min-width: 220px;
+  padding: 0.3rem;
+  border-radius: 6px;
+  border: 2px solid var(--primary);
+}
+
+.hint {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.wertung-hinweis {
+  padding: 0.5rem 1rem;
+  font-style: italic;
+}
+
+.rank-1 {
+  background: linear-gradient(90deg, gold, #fff7cc);
+  font-weight: bold;
+}
+.rank-2 {
+  background: linear-gradient(90deg, silver, #eee);
+}
+.rank-3 {
+  background: linear-gradient(90deg, #cd7f32, #f2d2b6);
+}
+
+.spieler-name {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.details-row {
+  background: var(--white);
+}
+
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.event-card {
+  background: var(--bg);
+  padding: 0.5rem;
+  border-left: 4px solid var(--secondary);
+  font-size: 0.85rem;
+}

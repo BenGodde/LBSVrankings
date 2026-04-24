@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rangliste</title>
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet"
+        href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <img src="logo.png" alt="Vereinslogo" class="logo">
+  <h1>Gesamtrangliste</h1>
+</header>
+
+<div class="controls">
+  <div>
+    <label for="teamFilter">Nach Team filtern:</label><br>
+    <select id="teamFilter">
+      <option value="">Alle Teams</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="eventFilter">Wertung anzeigen für:</label><br>
+    <select id="eventFilter" multiple size="5">
+      <option value="ALL" selected>Alle Events (Gesamtwertung)</option>
+    </select>
+    <div class="hint">
+      Mehrfachauswahl mit Strg / Cmd oder Touch
+    </div>
+  </div>
+</div>
+
+<p id="wertungHinweis" class="wertung-hinweis">
+  Anzeige: Gesamtwertung (beste 4 Events)
+</p>
+
+<table id="rankingTable" class="display">
+  <thead>
+    <tr>
+      <th>Rang</th>
+      <th>Vorname</th>
+      <th>Nachname</th>
+      <th>Team</th>
+      <th>Punkte</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script src="app.js"></script>
+</body>
+</html>
