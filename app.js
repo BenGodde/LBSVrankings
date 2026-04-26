@@ -65,15 +65,43 @@ function fuelleEventFilter() {
 }
 
 function aktualisiereAlles() {
-  const w = document.getElementById("wertungFilter").value;
-  spieler = alleSpieler.filter(s => s.wertung === w);
+  const wertung = document.getElementById("wertungFilter").value;
 
-  fuelleTeamFilter();
+  // 1️⃣ Spieler nach Wertung filtern
+  spieler = alleSpieler.filter(s => s.wertung === wertung);
+
+  // 2️⃣ Team-Filter vollständig zurücksetzen
+  const teamFilter = document.getElementById("teamFilter");
+  teamFilter.innerHTML = "<option value=''>Alle Teams</option>";
+  [...new Set(spieler.map(s => s.team))].sort().forEach(team => {
+    const o = document.createElement("option");
+    o.value = team;
+    o.textContent = team;
+    teamFilter.appendChild(o);
+  });
+
+  // 3️⃣ Event-Filter zurück auf Gesamtwertung
+  const eventFilter = document.getElementById("eventFilter");
+  [...eventFilter.options].forEach(o => o.selected = false);
+  eventFilter.querySelector("option[value='ALL']").selected = true;
+
+  // 4️⃣ DataTables-Suche & Filter vollständig resetten
+  table.search("").columns().search("").draw();
+
+  
+  // ✅ HIER GEHÖRT table.order() HIN ✅
+  // Erzwingt Sortierung nach Rang (Spalte 0)
+  table.order([[0, "asc"]]);
+
+  // 5️⃣ Wertungshinweis aktualisieren
+  document.getElementById("wertungHinweis").innerHTML =
+    `Rangliste für Wertung: <strong>${wertung}</strong>`;
+
+  // 6️⃣ Tabelle & Siegerbox neu berechnen
   aktualisiereTabelle();
   aktualisiereSiegerbox();
-  document.getElementById("wertungHinweis").innerHTML =
-    `Rangliste für Wertung: <strong>${w}</strong>`;
 }
+
 
 function fuelleTeamFilter() {
   const sel=document.getElementById("teamFilter");
