@@ -3,57 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vereinsrangliste</title>
+  <title>Gesamtrangliste</title>
 
+  <!-- DataTables CSS -->
   <link rel="stylesheet"
         href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+
+  <!-- Eigene Styles -->
   <link rel="stylesheet" href="style.css">
 
+  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 </head>
+
 <body>
 
-<h1>Gesamtrangliste</h1>
+  <!-- HEADER MIT LOGO -->
+  <header class="header">
+    <img src="logo.png" alt="Logo" class="logo">
+    <h1>Gesamtrangliste</h1>
+  </header>
 
-<div class="controls">
-  <label>
-    Wertung:
-    <select id="wertungFilter">
-      <option value="Netto" selected>Netto</option>
-      <option value="Brutto D">Brutto Damen</option>
-      <option value="Brutto H">Brutto Herren</option>
-    </select>
-  </label>
+  <!-- FILTER -->
+  <div class="controls">
+    <label>
+      Wertung:
+      <select id="wertungFilter">
+        <option value="Netto" selected>Netto</option>
+        <option value="Brutto D">Brutto Damen</option>
+        <option value="Brutto H">Brutto Herren</option>
+      </select>
+    </label>
 
-  <label>
-    Team:
-    <select id="teamFilter">
-      <option value="">Alle Teams</option>
-    </select>
-  </label>
+    <label>
+      Mannschaft:
+      <select id="teamFilter">
+        <option value="">Alle Mannschaften</option>
+      </select>
+    </label>
 
-  <label>
-    Events:
-    <select id="eventFilter" multiple size="4">
-      <option value="ALL" selected>Alle Events</option>
-    </select>
-  </label>
-</div>
+    <label>
+      Event:
+      <select id="eventFilter">
+        <option value="ALL" selected>Alle Events</option>
+      </select>
+    </label>
+  </div>
 
-<table id="rankingTable" class="display">
-  <thead>
-    <tr>
-      <th>Rang</th>
-      <th>Vorname</th>
-      <th>Nachname</th>
-      <th>Team</th>
-      <th>Punkte</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <!-- SIEGERBOX -->
+  <div id="siegerBox" class="sieger-box"></div>
 
-<script src="app.js"></script>
+  <!-- TABELLE -->
+  <table id="rankingTable" class="display">
+    <thead>
+      <tr>
+        <th>Rang</th>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Team</th>
+        <th>Punkte</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- APP LOGIK -->
+  <script src="app.js"></script>
+
 </body>
 </html>
