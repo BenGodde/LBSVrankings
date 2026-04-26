@@ -1,9 +1,8 @@
 :root {
   --primary: #2e7d32;
   --secondary: #f5b700;
-  --light-green: #a5d6a7;
-  --white: #ffffff;
   --bg: #f4f6f8;
+  --white: #ffffff;
   --text: #222;
 }
 
@@ -15,16 +14,9 @@ body {
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
   background: var(--primary);
   color: var(--white);
-}
-
-.logo {
-  height: 48px;
+  padding: 1rem;
 }
 
 .controls {
@@ -53,36 +45,28 @@ body {
   font-style: italic;
 }
 
-.rank-1 {
-  background: linear-gradient(90deg, gold, #fff7cc);
-  font-weight: bold;
-}
-.rank-2 {
-  background: linear-gradient(90deg, silver, #eee);
-}
-.rank-3 {
-  background: linear-gradient(90deg, #cd7f32, #f2d2b6);
+/* Medaillen in Tabelle */
+.rank-1 { background: linear-gradient(90deg, gold, #fff7cc); }
+.rank-2 { background: linear-gradient(90deg, silver, #eee); }
+.rank-3 { background: linear-gradient(90deg, #cd7f32, #f2d2b6); }
+
+/* Siegerbox */
+.sieger-box {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  flex-wrap: wrap;
 }
 
-.spieler-name {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.details-row {
+.sieger {
   background: var(--white);
+  border-left: 6px solid var(--secondary);
+  padding: 0.7rem 1rem;
+  min-width: 200px;
+  box-shadow: 0 2px 5px rgba(0,0,0,.1);
 }
 
-.event-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 0.5rem;
-  padding: 0.75rem;
+.sieger h3 {
+  margin: 0 0 0.3rem 0;
 }
-
-.event-card {
-  background: var(--bg);
-  padding: 0.5rem;
-  border-left: 4px solid var(--secondary);
-  font-size: 0.85rem;
-}
+``
