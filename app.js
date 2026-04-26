@@ -205,7 +205,9 @@ function aktualisiereTabelle() {
     });
   });
 
-  table.draw(false);
+  table
+  .order([[0, "asc"]])   // Rang-Spalte, aufsteigend
+  .draw(false);;
 }
 
 /**********************************************************
