@@ -1,60 +1,67 @@
-body{
+body {
   font-family: Arial, sans-serif;
-  background:#f4f6f8; /* hellgrün */
-  padding:0;
-  margin:0;
+  background: #e8f5e9; /* hellgrün */
+  margin: 0;
 }
 
-.header{
-  display:flex;
-  align-items:center;
-  gap:1rem;
-  padding:1rem;
-  background:#2e7d32;
-  color:white;
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #2e7d32;
+  color: white;
 }
 
-.logo{
-  height:50px;
+.logo {
+  height: 50px;
 }
 
-.controls{
-  display:flex;
-  flex-wrap:wrap;
-  gap:1rem;
-  padding:1rem;
-  background:white;
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
 }
 
-.nachname{
-  cursor:pointer;
-  font-weight:600;
-  color:#2e7d32;
-}
-.nachname:hover{
-  text-decoration:underline;
+.sieger-box {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
 }
 
-.sieger-box{
-  display:flex;
-  gap:1rem;
-  padding:1rem;
-}
-.sieger{
-  background:white;
-  padding:0.8rem;
-  border-left:6px solid gold;
-  min-width:180px;
+.sieger {
+  background: white;
+  border-left: 6px solid gold;
+  padding: 0.75rem;
+  min-width: 180px;
 }
 
-.details{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:0.5rem;
-  margin:0.5rem;
+.nachname {
+  cursor: pointer;
+  color: #2e7d32;
+  font-weight: bold;
 }
-.event-card{
-  background:#f1f8e9;
-  padding:0.5rem;
-  border-left:4px solid #66bb6a;
+.nachname::after {
+  content: " ▾";
+  font-weight: normal;
+}
+.nachname:hover {
+  text-decoration: underline;
+}
+
+/* Einzelergebnisse als Karten */
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.event-card {
+  background: #f1f8e9;
+  padding: 0.5rem;
+  border-left: 4px solid #66bb6a;
+  font-size: 0.9rem;
 }

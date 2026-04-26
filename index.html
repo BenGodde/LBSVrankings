@@ -21,57 +21,53 @@
 
 <body>
 
-  <!-- HEADER MIT LOGO -->
-  <header class="header">
-    <img src="logo.png" alt="Logo" class="logo">
-    <h1>Gesamtrangliste</h1>
-  </header>
+<header class="header">
+  <img src="logo.png" alt="Logo" class="logo">
+  <h1>Gesamtrangliste</h1>
+</header>
 
-  <!-- FILTER -->
-  <div class="controls">
-    <label>
-      Wertung:
-      <select id="wertungFilter">
-        <option value="Netto" selected>Netto</option>
-        <option value="Brutto D">Brutto Damen</option>
-        <option value="Brutto H">Brutto Herren</option>
-      </select>
-    </label>
+<div class="controls">
+  <label>
+    Wertung:
+    <select id="wertungFilter">
+      <option value="Netto">Netto</option>
+      <option value="Brutto D">Brutto Damen</option>
+      <option value="Brutto H">Brutto Herren</option>
+    </select>
+  </label>
 
-    <label>
-      Mannschaft:
-      <select id="teamFilter">
-        <option value="">Alle Mannschaften</option>
-      </select>
-    </label>
+  <label>
+    Mannschaft:
+    <select id="teamFilter">
+      <option value="">Alle Mannschaften</option>
+    </select>
+  </label>
 
-    <label>
-      Event:
-      <select id="eventFilter">
-        <option value="ALL" selected>Alle Events</option>
-      </select>
-    </label>
-  </div>
+  <label>
+    Event:
+    <select id="eventFilter">
+      <option value="ALL">Alle Events</option>
+    </select>
+  </label>
+</div>
 
-  <!-- SIEGERBOX -->
-  <div id="siegerBox" class="sieger-box"></div>
+<!-- Siegerbox -->
+<div id="siegerBox" class="sieger-box"></div>
 
-  <!-- TABELLE -->
-  <table id="rankingTable" class="display">
-    <thead>
-      <tr>
-        <th>Rang</th>
-        <th>Vorname</th>
-        <th>Nachname</th>
-        <th>Team</th>
-        <th>Punkte</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<table id="rankingTable" class="display">
+  <thead>
+    <tr>
+      <th>Rang</th>
+      <th>Vorname</th>
+      <th>Nachname</th>
+      <th>Team</th>
+      <th>Punkte</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
-  <!-- APP LOGIK -->
-  <script src="app.js"></script>
-
+<!-- App-Logik -->
+<script src="app.js"></script>
 </body>
 </html>
