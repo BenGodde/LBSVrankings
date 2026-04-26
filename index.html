@@ -5,54 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vereinsrangliste</title>
 
-  <!-- DataTables CSS -->
   <link rel="stylesheet"
         href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-
-  <!-- Eigene Styles -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-  <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 
-<header class="header">
-  <h1>Gesamtrangliste</h1>
-</header>
+<h1>Gesamtrangliste</h1>
 
 <div class="controls">
-  <div>
-    <label for="wertungFilter"><strong>Wertung:</strong></label><br>
+  <label>
+    Wertung:
     <select id="wertungFilter">
       <option value="Netto" selected>Netto</option>
       <option value="Brutto D">Brutto Damen</option>
       <option value="Brutto H">Brutto Herren</option>
     </select>
-  </div>
+  </label>
 
-  <div>
-    <label for="teamFilter">Team:</label><br>
+  <label>
+    Team:
     <select id="teamFilter">
       <option value="">Alle Teams</option>
     </select>
-  </div>
+  </label>
 
-  <div>
-    <label for="eventFilter">Events:</label><br>
-    <select id="eventFilter" multiple size="5">
-      <option value="ALL" selected>Alle Events (Gesamtwertung)</option>
+  <label>
+    Events:
+    <select id="eventFilter" multiple size="4">
+      <option value="ALL" selected>Alle Events</option>
     </select>
-    <div class="hint">Mehrfachauswahl mit Strg / Cmd oder Touch</div>
-  </div>
+  </label>
 </div>
-
-<p id="wertungHinweis" class="wertung-hinweis"></p>
-
-<div id="siegerBox" class="sieger-box"></div>
 
 <table id="rankingTable" class="display">
   <thead>
@@ -67,8 +54,6 @@
   <tbody></tbody>
 </table>
 
-<!-- ✅ app.js IMMER GANZ AM ENDE -->
-<script scr="app.js"></script>
-
+<script src="app.js"></script>
 </body>
 </html>
