@@ -12,7 +12,7 @@ let eventNamen = [];
 let table = null;
 
 /**********************************************************
- * Initialisierung
+ * CSV laden & starten
  **********************************************************/
 fetch(CSV_FILE + "?v=" + Date.now())
   .then(res => res.text())
@@ -24,47 +24,38 @@ fetch(CSV_FILE + "?v=" + Date.now())
   });
 
 /**********************************************************
- * CSV PARSING
- * Erwartetes Format:
+ * CSV PARSEN
+ * Erwartet:
  * Wertung,First Name,Last Name,Team Name,Event1,Event2,...
  **********************************************************/
 function parseCSV(text) {
-  // UTF‑8 BOM entfernen (falls vorhanden)
-  text = text.replace(/^\uFEFF/, "");
-
+  text = text.replace(/^\uFEFF/, ""); // BOM entfernen
   const lines = text.trim().split("\n");
-
-  if (lines.length < 2) {
-    throw new Error("CSV enthält keine Datenzeilen");
-  }
+  if (lines.length < 2) throw new Error("CSV enthält keine Daten");
 
   const delimiter = lines[0].includes(";") ? ";" : ",";
   const header = lines[0].split(delimiter);
 
-  // Eventnamen ab Spalte 5
+  // Events ab Spalte 5
   eventNamen = header.slice(4);
 
   alleSpieler = lines.slice(1).map(line => {
     const c = line.split(delimiter);
-
-    const eventPunkte = eventNamen.map((_, i) =>
-      Number(c[i + 4]) || 0
-    );
-
+    const events = eventNamen.map((_, i) => Number(c[i + 4]) || 0);
     return {
       wertung: c[0],
       vorname: c[1],
       nachname: c[2],
       team: c[3],
-      events: eventPunkte,
-      gesamt: berechneBesteVier(eventPunkte),
+      events,
+      gesamt: berechneBesteVier(events),
       anzeigePunkte: 0
     };
   });
 }
 
 /**********************************************************
- * UI AUFBAU
+ * UI Initialisierung
  **********************************************************/
 function initUI() {
   fuelleEventFilter();
@@ -72,9 +63,9 @@ function initUI() {
   table = $("#rankingTable").DataTable({
     paging: false,
     info: false,
-    order: [[0, "asc"]],
+    order: [[0, "asc"]], // Rang immer aufsteigend
     columnDefs: [
-      { targets: 0, type: "num", orderable: false }
+      { targets: 0, orderable: false } // Rang nicht klick-sortierbar
     ],
     columns: [
       { data: "Rang" },
@@ -87,14 +78,18 @@ function initUI() {
       search: "Suche:",
       zeroRecords: "Keine Einträge gefunden",
       emptyTable: "Keine Daten vorhanden"
+    },
+    createdRow: function (row, data) {
+      if (data.Rang === 1) row.classList.add("rank-1");
+      if (data.Rang === 2) row.classList.add("rank-2");
+      if (data.Rang === 3) row.classList.add("rank-3");
     }
   });
 
-  // Klick nur auf Nachname → Details auf/zu
+  // Klick auf Nachnamen → Details auf/zu
   $("#rankingTable tbody").on("click", ".nachname-click", function () {
     const tr = $(this).closest("tr");
     const row = table.row(tr);
-
     if (!row.data()) return;
 
     if (row.child.isShown()) {
@@ -105,7 +100,7 @@ function initUI() {
 
     const spieler = row.data()._spieler;
 
-    const html =
+    const detailsHTML =
       `<div class="event-grid">
         ${spieler.events.map((p, i) => `
           <div class="event-card">
@@ -113,13 +108,13 @@ function initUI() {
             ${p} Punkte
           </div>
         `).join("")}
-       </div>`;
+      </div>`;
 
-    row.child(html).show();
+    row.child(detailsHTML).show();
     tr.addClass("shown");
   });
 
-  // Filter-Events
+  // Filter
   document.getElementById("wertungFilter")
     .addEventListener("change", aktualisiereAlles);
 
@@ -137,15 +132,15 @@ function initUI() {
 }
 
 /**********************************************************
- * FILTER / AKTUALISIERUNG
+ * Filter & Aktualisierung
  **********************************************************/
 function aktualisiereAlles() {
   const wertung = document.getElementById("wertungFilter").value;
 
-  // 1) Nach Wertung filtern
+  // Spieler nach Wertung
   aktiveSpieler = alleSpieler.filter(s => s.wertung === wertung);
 
-  // 2) Teamfilter neu aufbauen
+  // Team-Filter neu füllen
   const teamFilter = document.getElementById("teamFilter");
   teamFilter.innerHTML = "<option value=''>Alle Teams</option>";
   [...new Set(aktiveSpieler.map(s => s.team))].sort().forEach(team => {
@@ -155,15 +150,15 @@ function aktualisiereAlles() {
     teamFilter.appendChild(o);
   });
 
-  // 3) Eventfilter reset
+  // Event-Filter zurücksetzen
   const eventFilter = document.getElementById("eventFilter");
   [...eventFilter.options].forEach(o => o.selected = false);
   eventFilter.querySelector("option[value='ALL']").selected = true;
 
-  // 4) DataTable Reset
+  // Tabelle resetten
   table.search("").columns().search("").order([[0, "asc"]]);
 
-  // 5) Hinweis
+  // Hinweis
   document.getElementById("wertungHinweis").innerHTML =
     `Rangliste für Wertung: <strong>${wertung}</strong>`;
 
@@ -172,11 +167,12 @@ function aktualisiereAlles() {
 }
 
 /**********************************************************
- * TABELLENLOGIK
+ * Tabelle neu aufbauen
  **********************************************************/
 function aktualisiereTabelle() {
   const eventAuswahl = ausgewaehlteEvents();
 
+  // Punkte berechnen
   aktiveSpieler.forEach(s => {
     s.anzeigePunkte =
       eventAuswahl === "ALL"
@@ -184,20 +180,15 @@ function aktualisiereTabelle() {
         : eventAuswahl.reduce((sum, i) => sum + s.events[i], 0);
   });
 
-  // intern sortieren (für Rang-Vergabe)
+  // intern nach Punkten sortieren (für Rang)
   aktiveSpieler.sort((a, b) => b.anzeigePunkte - a.anzeigePunkte);
 
   table.clear();
 
   aktiveSpieler.forEach((s, index) => {
     const rang = index + 1;
-    const rangKlasse =
-      rang === 1 ? "rank-1" :
-      rang === 2 ? "rank-2" :
-      rang === 3 ? "rank-3" : "";
-
     table.row.add({
-      Rang: `<span class="${rangKlasse}" data-order="${rang}">${rang}</span>`,
+      Rang: rang, // ✅ echte Zahl!
       Vorname: s.vorname,
       Nachname: `<span class="nachname-click">${s.nachname}</span>`,
       Team: s.team,
@@ -206,14 +197,11 @@ function aktualisiereTabelle() {
     });
   });
 
-  // ✅ ENTSCHEIDEND
-  table
-    .order([[0, "asc"]])
-    .draw(false);
+  table.order([[0, "asc"]]).draw(false);
 }
 
 /**********************************************************
- * SIEGERBOX
+ * Siegerbox
  **********************************************************/
 function aktualisiereSiegerbox() {
   const box = document.getElementById("siegerBox");
@@ -231,7 +219,7 @@ function aktualisiereSiegerbox() {
 }
 
 /**********************************************************
- * EVENTAUSWAHL
+ * Hilfsfunktionen
  **********************************************************/
 function ausgewaehlteEvents() {
   const opts = [...document.getElementById("eventFilter").selectedOptions];
@@ -241,9 +229,6 @@ function ausgewaehlteEvents() {
   return opts.map(o => Number(o.value));
 }
 
-/**********************************************************
- * EVENTFILTER BEFÜLLEN
- **********************************************************/
 function fuelleEventFilter() {
   const sel = document.getElementById("eventFilter");
   eventNamen.forEach((e, i) => {
@@ -254,9 +239,6 @@ function fuelleEventFilter() {
   });
 }
 
-/**********************************************************
- * HILFSFUNKTIONEN
- **********************************************************/
 function berechneBesteVier(punkte) {
   return [...punkte]
     .sort((a, b) => b - a)
