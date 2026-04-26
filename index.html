@@ -22,7 +22,7 @@
 <body>
 
 <header class="header">
-  <img src="logo.png" alt="Logo" class="logo">
+  <img src="logo.png" alt="Vereinslogo" class="logo">
   <h1>Gesamtrangliste</h1>
 </header>
 
@@ -30,7 +30,7 @@
   <label>
     Wertung:
     <select id="wertungFilter">
-      <option value="Netto">Netto</option>
+      <option value="Netto" selected>Netto</option>
       <option value="Brutto D">Brutto Damen</option>
       <option value="Brutto H">Brutto Herren</option>
     </select>
@@ -44,16 +44,18 @@
   </label>
 
   <label>
-    Event:
-    <select id="eventFilter">
-      <option value="ALL">Alle Events</option>
+    Events:
+    <select id="eventFilter" multiple size="4">
+      <option value="ALL" selected>Alle Events</option>
     </select>
+    <span class="hint">Mehrfachauswahl möglich</span>
   </label>
 </div>
 
 <!-- Siegerbox -->
 <div id="siegerBox" class="sieger-box"></div>
 
+<!-- Rangliste -->
 <table id="rankingTable" class="display">
   <thead>
     <tr>
@@ -69,5 +71,6 @@
 
 <!-- App-Logik -->
 <script src="app.js"></script>
+
 </body>
 </html>
