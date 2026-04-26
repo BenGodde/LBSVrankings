@@ -16,16 +16,17 @@ function parseCSV(text) {
   const d = lines[0].includes(";") ? ";" : ",";
   const header = lines[0].split(d);
 
-  events = header.slice(5);
+  // Events ab Spalte 5
+  events = header.slice(4);
 
   alleSpieler = lines.slice(1).map(l => {
     const c = l.split(d);
-    const ev = events.map((_, i) => Number(c[i + 5]) || 0);
+    const ev = events.map((_, i) => Number(c[i + 4]) || 0);
     return {
-      wertung: c[1],
-      vorname: c[2],
-      nachname: c[3],
-      team: c[4],
+      wertung: c[0],
+      vorname: c[1],
+      nachname: c[2],
+      team: c[3],
       events: ev,
       gesamt: besteVier(ev),
       anzeige: 0
@@ -39,18 +40,56 @@ function besteVier(p) {
 
 function init() {
   fuelleEventFilter();
+
   table = $("#rankingTable").DataTable({
-    paging:false, info:false,
-    language:{
-      search:"Suche:",
-      zeroRecords:"Keine Einträge",
-      emptyTable:"Keine Daten"
+    paging: false,
+    info: false,
+    columns: [
+      { data: "Rang" },
+      { data: "Vorname" },
+      { data: "Nachname" },
+      { data: "Team" },
+      { data: "Punkte" }
+    ],
+    language: {
+      search: "Suche:",
+      zeroRecords: "Keine Einträge",
+      emptyTable: "Keine Daten"
     }
   });
 
-  ["wertungFilter","eventFilter","teamFilter"]
-    .forEach(id => document.getElementById(id)
-      .addEventListener("change", aktualisiereAlles));
+  // Klick nur auf Nachname -> Details
+  $("#rankingTable tbody").on("click", ".nachname-click", function () {
+    const tr = $(this).closest("tr");
+    const row = table.row(tr);
+
+    if (row.child.isShown()) {
+      row.child.hide();
+      tr.removeClass("shown");
+      return;
+    }
+
+    const s = row.data()._spieler;
+    const html = `
+      <div class="event-grid">
+        ${s.events.map((p,i)=>`
+          <div class="event-card">
+            <strong>${events[i]}</strong><br>${p} Punkte
+          </div>`).join("")}
+      </div>`;
+    row.child(html).show();
+    tr.addClass("shown");
+  });
+
+  ["wertungFilter","eventFilter"].forEach(id =>
+    document.getElementById(id).addEventListener("change", aktualisiereAlles)
+  );
+
+  document.getElementById("teamFilter").addEventListener("change", () => {
+    table.column(3).search(
+      document.getElementById("teamFilter").value
+    ).draw();
+  });
 
   aktualisiereAlles();
 }
@@ -65,53 +104,32 @@ function fuelleEventFilter() {
 }
 
 function aktualisiereAlles() {
-  const wertung = document.getElementById("wertungFilter").value;
+  const w = document.getElementById("wertungFilter").value;
 
-  // 1️⃣ Spieler nach Wertung filtern
-  spieler = alleSpieler.filter(s => s.wertung === wertung);
+  // Wertung filtern
+  spieler = alleSpieler.filter(s => s.wertung === w);
 
-  // 2️⃣ Team-Filter vollständig zurücksetzen
-  const teamFilter = document.getElementById("teamFilter");
-  teamFilter.innerHTML = "<option value=''>Alle Teams</option>";
-  [...new Set(spieler.map(s => s.team))].sort().forEach(team => {
-    const o = document.createElement("option");
-    o.value = team;
-    o.textContent = team;
-    teamFilter.appendChild(o);
+  // Teamfilter neu
+  const tf = document.getElementById("teamFilter");
+  tf.innerHTML = "<option value=''>Alle Teams</option>";
+  [...new Set(spieler.map(s=>s.team))].sort().forEach(t=>{
+    const o=document.createElement("option");
+    o.value=t; o.textContent=t;
+    tf.appendChild(o);
   });
 
-  // 3️⃣ Event-Filter zurück auf Gesamtwertung
-  const eventFilter = document.getElementById("eventFilter");
-  [...eventFilter.options].forEach(o => o.selected = false);
-  eventFilter.querySelector("option[value='ALL']").selected = true;
+  // Eventfilter auf ALL zurück
+  const ef = document.getElementById("eventFilter");
+  [...ef.options].forEach(o=>o.selected=false);
+  ef.querySelector("option[value='ALL']").selected=true;
 
-  // 4️⃣ DataTables-Suche & Filter vollständig resetten
-  table.search("").columns().search("").draw();
+  table.search("").columns().search("").order([[0,"asc"]]);
 
-  
-  // ✅ HIER GEHÖRT table.order() HIN ✅
-  // Erzwingt Sortierung nach Rang (Spalte 0)
-  table.order([[0, "asc"]]);
-
-  // 5️⃣ Wertungshinweis aktualisieren
   document.getElementById("wertungHinweis").innerHTML =
-    `Rangliste für Wertung: <strong>${wertung}</strong>`;
+    `Rangliste für Wertung: <strong>${w}</strong>`;
 
-  // 6️⃣ Tabelle & Siegerbox neu berechnen
   aktualisiereTabelle();
   aktualisiereSiegerbox();
-}
-
-
-function fuelleTeamFilter() {
-  const sel=document.getElementById("teamFilter");
-  sel.innerHTML="<option value=''>Alle Teams</option>";
-  [...new Set(spieler.map(s=>s.team))].sort()
-    .forEach(t=>{
-      const o=document.createElement("option");
-      o.value=t; o.textContent=t;
-      sel.appendChild(o);
-    });
 }
 
 function ausgewaehlteEvents() {
@@ -121,7 +139,8 @@ function ausgewaehlteEvents() {
 }
 
 function aktualisiereTabelle() {
-  const a=ausgewaehlteEvents();
+  const a = ausgewaehlteEvents();
+
   spieler.forEach(s=>{
     s.anzeige = a==="ALL" ? s.gesamt : a.reduce((sum,i)=>sum+s.events[i],0);
   });
@@ -130,10 +149,14 @@ function aktualisiereTabelle() {
   table.clear();
   spieler.forEach((s,i)=>{
     const rc=i===0?"rank-1":i===1?"rank-2":i===2?"rank-3":"";
-    table.row.add([
-      `<span class="${rc}">${i+1}</span>`,
-      s.vorname, s.nachname, s.team, s.anzeige
-    ]);
+    table.row.add({
+      Rang: `<span class="${rc}">${i+1}</span>`,
+      Vorname: s.vorname,
+      Nachname: `<span class="nachname-click">${s.nachname}</span>`,
+      Team: s.team,
+      Punkte: s.anzeige,
+      _spieler: s
+    });
   });
   table.draw(false);
 }
@@ -142,13 +165,12 @@ function aktualisiereSiegerbox() {
   const box=document.getElementById("siegerBox");
   box.innerHTML="";
   spieler.slice(0,3).forEach((s,i)=>{
-    const medal = ["🥇","🥈","🥉"][i];
+    const m=["🥇","🥈","🥉"][i];
     box.innerHTML += `
       <div class="sieger">
-        <h3>${medal} Platz ${i+1}</h3>
+        <h3>${m} Platz ${i+1}</h3>
         ${s.vorname} ${s.nachname}<br>
         <strong>${s.anzeige} Punkte</strong>
       </div>`;
   });
 }
-``
