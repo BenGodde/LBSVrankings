@@ -184,6 +184,7 @@ function aktualisiereTabelle() {
         : eventAuswahl.reduce((sum, i) => sum + s.events[i], 0);
   });
 
+  // intern sortieren (für Rang-Vergabe)
   aktiveSpieler.sort((a, b) => b.anzeigePunkte - a.anzeigePunkte);
 
   table.clear();
@@ -205,9 +206,10 @@ function aktualisiereTabelle() {
     });
   });
 
+  // ✅ ENTSCHEIDEND
   table
-  .order([[0, "asc"]])   // Rang-Spalte, aufsteigend
-  .draw(false);;
+    .order([[0, "asc"]])
+    .draw(false);
 }
 
 /**********************************************************
