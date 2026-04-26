@@ -40,10 +40,14 @@ function besteVier(p) {
 
 function init() {
   fuelleEventFilter();
-
+  
   table = $("#rankingTable").DataTable({
     paging: false,
     info: false,
+    order: [[0, "asc"]],
+    columnDefs: [
+      { targets: 0, type: "num", orderable: false }
+    ]
     columns: [
       { data: "Rang" },
       { data: "Vorname" },
@@ -57,6 +61,7 @@ function init() {
       emptyTable: "Keine Daten"
     }
   });
+
 
   // Klick nur auf Nachname -> Details
   $("#rankingTable tbody").on("click", ".nachname-click", function () {
@@ -150,7 +155,7 @@ function aktualisiereTabelle() {
   spieler.forEach((s,i)=>{
     const rc=i===0?"rank-1":i===1?"rank-2":i===2?"rank-3":"";
     table.row.add({
-      Rang: `<span class="${rc}">${i+1}</span>`,
+      Rang: `<span class="${rc}" data-order="${i+1}">${i+1}</span>`,
       Vorname: s.vorname,
       Nachname: `<span class="nachname-click">${s.nachname}</span>`,
       Team: s.team,
