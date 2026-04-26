@@ -1,25 +1,37 @@
 const CSV_FILE = "ranking.csv";
 
-let spieler = [];
+let alleSpieler = [];
 let events = [];
-let table;
+let table = null;
 
+/* =======================================================
+   CSV laden
+======================================================= */
 fetch(CSV_FILE)
-  .then(r => r.text())
+  .then(res => res.text())
   .then(parseCSV)
-  .then(init);
+  .then(init)
+  .catch(err => {
+    console.error("CSV konnte nicht geladen werden", err);
+  });
 
+/* =======================================================
+   CSV parsen
+   Erwartet:
+   Wertung,Vorname,Nachname,Team,Event1,Event2,...
+======================================================= */
 function parseCSV(text) {
-  text = text.replace(/^\uFEFF/, "");
+  text = text.replace(/^\uFEFF/, ""); // BOM entfernen
   const lines = text.trim().split("\n");
-  const d = lines[0].includes(";") ? ";" : ",";
-  const header = lines[0].split(d);
+  const delimiter = lines[0].includes(";") ? ";" : ",";
 
+  const header = lines[0].split(delimiter);
   events = header.slice(4);
 
-  spieler = lines.slice(1).map(line => {
-    const c = line.split(d);
+  alleSpieler = lines.slice(1).map(line => {
+    const c = line.split(delimiter);
     const ev = events.map((_, i) => Number(c[i + 4]) || 0);
+
     return {
       wertung: c[0],
       vorname: c[1],
@@ -31,24 +43,16 @@ function parseCSV(text) {
   });
 }
 
-function besteVier(p) {
-  return [...p].sort((a,b)=>b-a).slice(0,4).reduce((s,x)=>s+x,0);
-}
-
+/* =======================================================
+   Initialisierung
+======================================================= */
 function init() {
-  // Event-Filter füllen
-  const ef = document.getElementById("eventFilter");
-  events.forEach((e,i)=>{
-    const o=document.createElement("option");
-    o.value=i; o.textContent=e;
-    ef.appendChild(o);
-  });
-
   table = $("#rankingTable").DataTable({
     paging: false,
     info: false
   });
 
+  // Klick auf Nachname → Details auf/zu
   $("#rankingTable tbody").on("click", ".nachname", function () {
     const tr = $(this).closest("tr");
     const row = table.row(tr);
@@ -58,8 +62,8 @@ function init() {
       return;
     }
 
-    const idx = tr.data("index");
-    const s = spieler[idx];
+    const index = tr.data("idx");
+    const s = alleSpieler[index];
 
     row.child(
       `<div class="details">
@@ -68,31 +72,47 @@ function init() {
     ).show();
   });
 
-  document.getElementById("wertungFilter").addEventListener("change", update);
-  document.getElementById("eventFilter").addEventListener("change", update);
+  // Wertungsfilter
+  document
+    .getElementById("wertungFilter")
+    .addEventListener("change", update);
 
-  update();
+  update(); // Initial anzeigen
 }
 
+/* =======================================================
+   Tabelle aktualisieren (STABIL)
+======================================================= */
 function update() {
   const wertung = document.getElementById("wertungFilter").value;
-  const evSel = [...document.getElementById("eventFilter").selectedOptions]
-    .map(o => o.value);
 
   table.clear();
 
-  spieler
+  alleSpieler
     .filter(s => s.wertung === wertung)
-    .sort((a,b)=>b.gesamt-a.gesamt)
-    .forEach((s,i)=>{
-      table.row.add([
-        i+1,
+    .sort((a, b) => b.gesamt - a.gesamt) // rein intern
+    .forEach((s, i) => {
+      const node = table.row.add([
+        i + 1,
         s.vorname,
         `<span class="nachname">${s.nachname}</span>`,
         s.team,
         s.gesamt
-      ]).node().dataset.index = spieler.indexOf(s);
+      ]).node();
+
+      // Index für Detailansicht merken
+      node.dataset.idx = alleSpieler.indexOf(s);
     });
 
   table.draw();
+}
+
+/* =======================================================
+   Hilfsfunktion: beste 4 Events
+======================================================= */
+function besteVier(punkte) {
+  return [...punkte]
+    .sort((a, b) => b - a)
+    .slice(0, 4)
+    .reduce((s, p) => s + p, 0);
 }
