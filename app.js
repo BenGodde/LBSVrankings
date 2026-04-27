@@ -97,12 +97,31 @@ function update() {
     .map(o => o.value)
     .filter(v => v !== "ALL");
 
+  const istTeamWertung =
+    wertung === "Team Netto" || wertung === "Team Brutto";
+
+const istTeamWertung =const istTeam wertung === "Team Netto" || wertung === "Team Brutto";
+
+  // Spalten:
+  // 0 Rang
+  // 1 Vorname
+  // 2 Nachname
+  // 3 Team
+  // 4 Punkte
+
+  if (istTeamWertung) {
+    // 🔒 Einzelspalten ausblenden
+    table.column(1).visible(false); // Vorname
+    table.column(2).visible(false); // Nachname
+  } else {
+    // ✅ Einzelwertungen: Spalten einblenden
+    table.column(1).visible(true);
+    table.column(2).visible(true);
+  }
+
   table.clear();
   const siegerBox = document.getElementById("siegerBox");
   siegerBox.innerHTML = "";
-
-  const istTeamWertung =
-    wertung === "Team Netto" || wertung === "Team Brutto";
 
   siegerBox.innerHTML =
     `<div class="wertung-hinweis">${
