@@ -35,7 +35,6 @@ function parseCSV(text) {
 
 /* ================= INIT ================= */
 function init() {
-  // Event-Filter
   const ef = document.getElementById("eventFilter");
   eventNamen.forEach((e, i) => {
     const o = document.createElement("option");
@@ -44,7 +43,6 @@ function init() {
     ef.appendChild(o);
   });
 
-  // Team-Filter
   const tf = document.getElementById("teamFilter");
   [...new Set(spielerAlle.map(s => s.team))].sort().forEach(t => {
     const o = document.createElement("option");
@@ -61,7 +59,7 @@ function init() {
   // Detailansicht nur für Einzelwertungen
   $("#rankingTable tbody").on("click", ".nachname", function () {
     const wertung = document.getElementById("wertungFilter").value;
-    if (wertung === "Team Netto" || wertung === "Team Brutto") return;
+    if (wertung.startsWith("Team")) return;
 
     const tr = $(this).closest("tr");
     const row = table.row(tr);
@@ -78,8 +76,7 @@ function init() {
       <div class="details">
         ${s.events.map((p, i) => `
           <div class="event-card">
-            <strong>${eventNamen[i]}</strong><br>
-            ${p} Punkte
+            <strong>${eventNamen[i]}</strong><br>${p} Punkte
           </div>
         `).join("")}
       </div>
@@ -100,10 +97,6 @@ function update() {
   const istTeamWertung =
     wertung === "Team Netto" || wertung === "Team Brutto";
 
-  // Spalten korrekt ein-/ausblenden
-  table.column(1).visible(!istTeamWertung); // Vorname
-  table.column(2).visible(!istTeamWertung); // Nachname
-
   const eventSelect = [...document.getElementById("eventFilter").selectedOptions]
     .map(o => o.value)
     .filter(v => v !== "ALL");
@@ -118,7 +111,6 @@ function update() {
     </div>`;
 
   if (!istTeamWertung) {
-    // ===== EINZELWERTUNGEN =====
     aktuelleDaten = spielerAlle
       .filter(s => s.wertung === wertung)
       .filter(s => !team || s.team === team)
@@ -130,33 +122,25 @@ function update() {
             : eventSelect.reduce((sum, i) => sum + s.events[i], 0)
       }))
       .sort((a, b) => b.punkte - a.punkte);
-
   } else {
-    // ===== TEAMWERTUNGEN =====
     const teams = {};
-
     spielerAlle.forEach(s => {
       if (
         (wertung === "Team Netto" && s.wertung !== "Netto") ||
         (wertung === "Team Brutto" && !s.wertung.startsWith("Brutto"))
       ) return;
-
       if (!teams[s.team]) teams[s.team] = [];
       teams[s.team].push(s);
     });
 
-    aktuelleDaten = Object.keys(teams).map(teamName => {
-      const ergebnis = berechneTeamPunkte(
-        teams[teamName].flatMap(s => s.events)
-      );
-      return {
-        team: teamName,
-        punkte: ergebnis
-      };
-    }).sort((a, b) => b.punkte - a.punkte);
+    aktuelleDaten = Object.keys(teams).map(teamName => ({
+      team: teamName,
+      punkte: berechneTeamPunkte(teams[teamName].flatMap(s => s.events))
+    }))
+    .sort((a, b) => b.punkte - a.punkte);
   }
 
-  // ===== ex‑aequo =====
+  // ex‑aequo
   let rang = 0, last = null, pos = 0;
   aktuelleDaten.forEach(s => {
     pos++;
@@ -165,16 +149,10 @@ function update() {
     last = s.punkte;
   });
 
-  // ===== Tabelle =====
+  // Tabelle befüllen
   aktuelleDaten.forEach((s, i) => {
     const row = istTeamWertung
-      ? [
-          s.rang,
-          "",
-          "",
-          s.team,
-          s.punkte
-        ]
+      ? [s.rang, "", "", s.team, s.punkte]
       : [
           s.rang,
           s.vorname,
@@ -189,7 +167,11 @@ function update() {
 
   table.draw();
 
-  // ===== Siegerbox =====
+  // ✅ Spalten SICHTBARKEIT **NACH** draw!
+  table.column(1).visible(!istTeamWertung);
+  table.column(2).visible(!istTeamWertung);
+
+  // Siegerbox
   aktuelleDaten.filter(s => s.rang <= 3).slice(0, 3).forEach((s, i) => {
     siegerBox.innerHTML += `
       <div class="sieger">
@@ -202,17 +184,10 @@ function update() {
 
 /* ================= Helfer ================= */
 function besteVier(punkte) {
-  return [...punkte]
-    .sort((a, b) => b - a)
-    .slice(0, 4)
-    .reduce((s, p) => s + p, 0);
+  return [...punkte].sort((a, b) => b - a).slice(0, 4).reduce((s, p) => s + p, 0);
 }
 
 function berechneTeamPunkte(events) {
-  const beste6 = events
-    .slice(0, 8)
-    .sort((a, b) => b - a)
-    .slice(0, 6);
-
+  const beste6 = events.slice(0, 8).sort((a, b) => b - a).slice(0, 6);
   return beste6.reduce((s, p) => s + p, 0) + (events[8] || 0);
 }
