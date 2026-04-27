@@ -58,8 +58,11 @@ function init() {
     info: false
   });
 
-  // Detail-Klick
+  // Detailansicht nur für Einzelwertungen
   $("#rankingTable tbody").on("click", ".nachname", function () {
+    const wertung = document.getElementById("wertungFilter").value;
+    if (wertung === "Team Netto" || wertung === "Team Brutto") return;
+
     const tr = $(this).closest("tr");
     const row = table.row(tr);
     const idx = tr.data("idx");
@@ -77,7 +80,8 @@ function init() {
           <div class="event-card">
             <strong>${eventNamen[i]}</strong><br>
             ${p} Punkte
-          </div>`).join("")}
+          </div>
+        `).join("")}
       </div>
     `).show();
   });
@@ -93,45 +97,28 @@ function update() {
   const wertung = document.getElementById("wertungFilter").value;
   const team = document.getElementById("teamFilter").value;
 
+  const istTeamWertung =
+    wertung === "Team Netto" || wertung === "Team Brutto";
+
+  // Spalten korrekt ein-/ausblenden
+  table.column(1).visible(!istTeamWertung); // Vorname
+  table.column(2).visible(!istTeamWertung); // Nachname
+
   const eventSelect = [...document.getElementById("eventFilter").selectedOptions]
     .map(o => o.value)
     .filter(v => v !== "ALL");
 
-  const istTeamWertung =
-    wertung === "Team Netto" || wertung === "Team Brutto";
-
-const istTeamWertung =const istTeam wertung === "Team Netto" || wertung === "Team Brutto";
-
-  // Spalten:
-  // 0 Rang
-  // 1 Vorname
-  // 2 Nachname
-  // 3 Team
-  // 4 Punkte
-
-  if (istTeamWertung) {
-    // 🔒 Einzelspalten ausblenden
-    table.column(1).visible(false); // Vorname
-    table.column(2).visible(false); // Nachname
-  } else {
-    // ✅ Einzelwertungen: Spalten einblenden
-    table.column(1).visible(true);
-    table.column(2).visible(true);
-  }
-
   table.clear();
   const siegerBox = document.getElementById("siegerBox");
-  siegerBox.innerHTML = "";
-
-  siegerBox.innerHTML =
-    `<div class="wertung-hinweis">${
-      istTeamWertung
-        ? "Wertung: beste 6 aus Events 1–8 plus Finale (Event 9)"
-        : "Wertung: beste 4 Ergebnisse"
-    }</div>`;
+  siegerBox.innerHTML = `
+    <div class="wertung-hinweis">
+      ${istTeamWertung
+        ? "Wertung: beste 6 Ergebnisse aus Events 1–8 plus Finale (Event 9)"
+        : "Wertung: beste 4 Ergebnisse"}
+    </div>`;
 
   if (!istTeamWertung) {
-    // EINZEL
+    // ===== EINZELWERTUNGEN =====
     aktuelleDaten = spielerAlle
       .filter(s => s.wertung === wertung)
       .filter(s => !team || s.team === team)
@@ -145,7 +132,7 @@ const istTeamWertung =const istTeam wertung === "Team Netto" || wertung === "Tea
       .sort((a, b) => b.punkte - a.punkte);
 
   } else {
-    // TEAM
+    // ===== TEAMWERTUNGEN =====
     const teams = {};
 
     spielerAlle.forEach(s => {
@@ -158,16 +145,18 @@ const istTeamWertung =const istTeam wertung === "Team Netto" || wertung === "Tea
       teams[s.team].push(s);
     });
 
-    aktuelleDaten = Object.keys(teams).map(teamName => ({
-      team: teamName,
-      punkte: berechneTeamPunkte(
+    aktuelleDaten = Object.keys(teams).map(teamName => {
+      const ergebnis = berechneTeamPunkte(
         teams[teamName].flatMap(s => s.events)
-      )
-    }))
-    .sort((a, b) => b.punkte - a.punkte);
+      );
+      return {
+        team: teamName,
+        punkte: ergebnis
+      };
+    }).sort((a, b) => b.punkte - a.punkte);
   }
 
-  // ex-aequo
+  // ===== ex‑aequo =====
   let rang = 0, last = null, pos = 0;
   aktuelleDaten.forEach(s => {
     pos++;
@@ -176,29 +165,23 @@ const istTeamWertung =const istTeam wertung === "Team Netto" || wertung === "Tea
     last = s.punkte;
   });
 
-  // Tabelle
+  // ===== Tabelle =====
   aktuelleDaten.forEach((s, i) => {
-    let row;
-
-    if (istTeamWertung) {
-      // ✅ TEAMWERTUNGEN
-      row = [
-        s.rang,
-        "",      // Vorname leer
-        "",      // Nachname leer
-        s.team,  // ✅ Team in richtiger Spalte
-        s.punkte
-      ];
-    } else {
-      // ✅ EINZELWERTUNGEN
-      row = [
-        s.rang,
-        s.vorname,
-        `<span class="nachname">${s.nachname}</span>`,
-        s.team,
-        s.punkte
-      ];
-    }
+    const row = istTeamWertung
+      ? [
+          s.rang,
+          "",
+          "",
+          s.team,
+          s.punkte
+        ]
+      : [
+          s.rang,
+          s.vorname,
+          `<span class="nachname">${s.nachname}</span>`,
+          s.team,
+          s.punkte
+        ];
 
     const tr = table.row.add(row).node();
     tr.dataset.idx = i;
@@ -206,7 +189,7 @@ const istTeamWertung =const istTeam wertung === "Team Netto" || wertung === "Tea
 
   table.draw();
 
-  // Siegerbox
+  // ===== Siegerbox =====
   aktuelleDaten.filter(s => s.rang <= 3).slice(0, 3).forEach((s, i) => {
     siegerBox.innerHTML += `
       <div class="sieger">
@@ -218,11 +201,18 @@ const istTeamWertung =const istTeam wertung === "Team Netto" || wertung === "Tea
 }
 
 /* ================= Helfer ================= */
-function besteVier(p) {
-  return [...p].sort((a,b)=>b-a).slice(0,4).reduce((s,x)=>s+x,0);
+function besteVier(punkte) {
+  return [...punkte]
+    .sort((a, b) => b - a)
+    .slice(0, 4)
+    .reduce((s, p) => s + p, 0);
 }
 
 function berechneTeamPunkte(events) {
-  const beste6 = events.slice(0,8).sort((a,b)=>b-a).slice(0,6);
-  return beste6.reduce((s,x)=>s+x,0) + (events[8] || 0);
+  const beste6 = events
+    .slice(0, 8)
+    .sort((a, b) => b - a)
+    .slice(0, 6);
+
+  return beste6.reduce((s, p) => s + p, 0) + (events[8] || 0);
 }
