@@ -160,11 +160,11 @@ function update() {
   // Tabelle
   aktuelleDaten.forEach((s, i) => {
     const row = istTeamWertung
-      ? [s.rang, "", s.team, "", s.punkte]
+      ? [s.rang, "", "", s.team, s.punkte]
       : [
           s.rang,
-          s.vorname,
-          `<span class="nachname">${s.nachname}</span>`,
+          "",
+          "",
           s.team,
           s.punkte
         ];
