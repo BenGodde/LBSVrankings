@@ -104,6 +104,13 @@ function update() {
   const istTeamWertung =
     wertung === "Team Netto" || wertung === "Team Brutto";
 
+  const hinweisText = istTeamWertung
+    ? "Wertung: beste 6 Ergebnisse aus Events 1–8 plus Finale (Event 9)"
+    : "Wertung: beste 4 Ergebnisse";
+
+  document.getElementById("siegerBox").innerHTML =
+    `<div class="wertung-hinweis">${hinweisText}</div>`;
+
   if (!istTeamWertung) {
     // ===== EINZELWERTUNGEN (wie bisher) =====
     aktuelleDaten = spielerAlle
@@ -198,10 +205,14 @@ function update() {
     .filter(s => s.rang <= 3)
     .slice(0, 3)
     .forEach((s, i) => {
+      const nameAnzeige = istTeamWertung
+        ? s.team
+        : `${s.vorname} ${s.nachname}`;
+
       document.getElementById("siegerBox").innerHTML += `
         <div class="sieger">
           ${["🥇","🥈","🥉"][i]} Platz ${s.rang}<br>
-          <strong>${istTeamWertung ? s.team : s.vorname + " " + s.nachname}</strong><br>
+          <strong>${nameAnzeige}</strong><br>
           ${s.punkte} Punkte
         </div>`;
     });

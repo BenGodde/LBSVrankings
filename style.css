@@ -104,6 +104,12 @@ table.dataTable {
   font-size: 0.85rem;
 }
 
+.wertung-hinweis {
+  width: 100%;
+  font-style: italic;
+  opacity: 0.8;
+}
+
 /* Mobile-Optimierung */
 @media (max-width: 700px) {
   .controls {
