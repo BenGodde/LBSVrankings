@@ -73,18 +73,21 @@ table.dataTable {
 }
 
 /* Klickbarer Nachname */
-.nachname {
+.nachname,
+.teamname {
   cursor: pointer;
   color: #2e7d32;
   font-weight: 600;
 }
 
-.nachname::after {
+.nachname::after,
+.teamname::after {
   content: " ▾";
   font-weight: normal;
 }
 
-.nachname:hover {
+.nachname:hover,
+.teamname:hover {
   text-decoration: underline;
 }
 
