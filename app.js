@@ -216,6 +216,7 @@ function update() {
           ${s.punkte} Punkte
         </div>`;
     });
+
 }
 
 /* ================= Hilfsfunktionen ================= */
