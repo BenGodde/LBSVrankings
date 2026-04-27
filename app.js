@@ -159,15 +159,27 @@ function update() {
 
   // Tabelle
   aktuelleDaten.forEach((s, i) => {
-    const row = istTeamWertung
-      ? [s.rang, "", "", s.team, s.punkte]
-      : [
-          s.rang,
-          "",
-          "",
-          s.team,
-          s.punkte
-        ];
+    let row;
+
+    if (istTeamWertung) {
+      // ✅ TEAMWERTUNGEN
+      row = [
+        s.rang,
+        "",      // Vorname leer
+        "",      // Nachname leer
+        s.team,  // ✅ Team in richtiger Spalte
+        s.punkte
+      ];
+    } else {
+      // ✅ EINZELWERTUNGEN
+      row = [
+        s.rang,
+        s.vorname,
+        `<span class="nachname">${s.nachname}</span>`,
+        s.team,
+        s.punkte
+      ];
+    }
 
     const tr = table.row.add(row).node();
     tr.dataset.idx = i;
