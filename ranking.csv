@@ -146,8 +146,8 @@ Netto,Birthe,Lentzen,Brasserie Eagles (B),0,230.0,0,0,0,0,0,0,0
 Netto,Joern,Bohlen,Brasserie Eagles (A),0,200.0,0,0,0,0,0,0,0
 Netto,Michael,Scharf,Kein Team,0,0.0,0,0,0,0,0,0,0
 Netto, Mark,Engelhardt,Diersch + Schroeder,0,0.0,0,0,0,0,0,0,0
-Netto,Werner,Schiffers,Kein Team,0,0.0,,,,,,,
-Netto,Tobias,Mann,Kein Team,0,0.0,,,,,,,
+Netto,Werner,Schiffers,Kein Team,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Netto,Tobias,Mann,Kein Team,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
 Brutto D,Baetjer, Tanja,Brasserie Eagles (B),0,500,0,0,0,0,0,0,0
 Brutto D,Bernhardt, Nicole,L+S Eagle Eyes Golf Team,230,0,0,0,0,0,0,0,0
 Brutto D,Bunger, Martina,L+S Eagle Eyes Golf Team,0,0,0,0,0,0,0,0,0
@@ -175,7 +175,7 @@ Brutto D,Sablowski, Anja,Brasserie Eagles (B),0,0,0,0,0,0,0,0,0
 Brutto D,Schmidt, Maike,Kein Team,0,0,0,0,0,0,0,0,0
 Brutto D,Schnaars, Manuela,Kein Team,0,0,0,0,0,0,0,0,0
 Brutto D,Schwarz, Janine,Kein Team,0,0,0,0,0,0,0,0,0
-Brutto D,Tete, Birgit,Brasserie Eagles (B),190,-,0,0,0,0,0,0,0
+Brutto D,Tete, Birgit,Brasserie Eagles (B),190,0,0,0,0,0,0,0,0
 Brutto D,Wendt, Astrid,Putting Crew,0,0,0,0,0,0,0,0,0
 Brutto D,Lentzen, Birthe,Brasserie Eagles (B),0,250,0,0,0,0,0,0,0
 Brutto H,Appel, Rainer,Kein Team,0,0.0,0,0,0,0,0,0,0
@@ -207,7 +207,7 @@ Brutto H,Froehlich, Alexander,Irish Flag,170,220.0,0,0,0,0,0,0,0
 Brutto H,Fuerst, Patrick,Diersch + Schroeder,0,0.0,0,0,0,0,0,0,0
 Brutto H,Gerken, Peter,Brasserie Eagles (A),0,0.0,0,0,0,0,0,0,0
 Brutto H,Giesenbauer, Beric,Kein Team,0,0.0,0,0,0,0,0,0,0
-Brutto H,Godde, Ben,L+S Eagle Eyes Golf Team,0,0,0,0,0,0,0,0,0
+Brutto H,Godde, Ben,L+S Eagle Eyes Golf Team,0,0.0,0,0,0,0,0,0,0
 Brutto H,Godde, Christian,L+S Eagle Eyes Golf Team,0,0.0,0,0,0,0,0,0,0
 Brutto H,Grieshaber, Dietmar,Kein Team,0,0.0,0,0,0,0,0,0,0
 Brutto H,Guensch, Tobias,Kein Team,4,0.0,0,0,0,0,0,0,0
@@ -216,7 +216,7 @@ Brutto H,Hahn, Michael Paul,Golf Knights,4,0.0,0,0,0,0,0,0,0
 Brutto H,Heidelmann, Andreas,Diersch + Schroeder,0,3.3,0,0,0,0,0,0,0
 Brutto H,Heissenbüttel, Uwe,Golf Knights,0,320.0,0,0,0,0,0,0,0
 Brutto H,Hilmer, Thomas,Golf Knights,0,0.0,0,0,0,0,0,0,0
-Brutto H,Hofer, Ralf,Golf Knights,0,0,0,0,0,0,0,0,0
+Brutto H,Hofer, Ralf,Golf Knights,0,0.0,0,0,0,0,0,0,0
 Brutto H,Hoffmann, Alexander,Kühne + Nagel,0,0.0,0,0,0,0,0,0,0
 Brutto H,Hueneke, Ronald,L+S Eagle Eyes Golf Team,0,80.0,0,0,0,0,0,0,0
 Brutto H,Janssen, Torben,Kein Team,0,0.0,0,0,0,0,0,0,0
@@ -231,7 +231,7 @@ Brutto H,Koelle, Karsten,Irish Flag,0,0.0,0,0,0,0,0,0,0
 Brutto H,Koplin, Steffen,Diersch + Schroeder,70,140.0,0,0,0,0,0,0,0
 Brutto H,Krumrey, Axel,Kühne + Nagel,0,0.0,0,0,0,0,0,0,0
 Brutto H,Kruse, Joerg,Kühne + Nagel,0,0.0,0,0,0,0,0,0,0
-Brutto H,Kuehl, Harald,Brasserie Eagles (A),323,0,0,0,0,0,0,0,0
+Brutto H,Kuehl, Harald,Brasserie Eagles (A),323,0.0,0,0,0,0,0,0,0
 Brutto H,Lammert, Jan Uwe,Golfreisen,0,0.0,0,0,0,0,0,0,0
 Brutto H,Liborius, Stephan,Brasserie Eagles (B),70,3.3,0,0,0,0,0,0,0
 Brutto H,Lindner, Stephan,Kein Team,0,0.0,0,0,0,0,0,0,0
