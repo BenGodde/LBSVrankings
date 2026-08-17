@@ -1,4 +1,5 @@
 const CSV_FILE = "ranking.csv";
+const TEAM_BESTE_EVENTS = 5;
 
 let spielerAlle = [];
 let aktuelleDaten = [];
@@ -155,7 +156,7 @@ function update() {
   siegerBox.innerHTML = `
     <div class="wertung-hinweis">
       ${istTeamWertung
-        ? "Wertung: beste 6 aus Events 1–8 plus Finale (Event 9)"
+        ? "Wertung: beste ${TEAM_BESTE_EVENTS} aus Events 1–8 plus Finale (Event 9)"
         : "Wertung: beste 4 Ergebnisse"}
     </div>`;
 
@@ -192,7 +193,7 @@ function update() {
           .slice(0, 8)
           .map((p, i) => ({ idx: i, punkte: p }))
           .sort((a, b) => b.punkte - a.punkte)
-          .slice(0, 6);
+          .slice(0, TEAM_BESTE_EVENTS);
 
         const finaleIdx = 8;
         const finalePunkte = s.events[8] || 0;
