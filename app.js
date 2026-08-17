@@ -156,7 +156,7 @@ function update() {
   siegerBox.innerHTML = `
     <div class="wertung-hinweis">
       ${istTeamWertung
-        ? `Wertung: beste ${TEAM_BESTE_EVENTS} aus Events 1–8 plus Finale (Event 9)
+        ? "Wertung: beste 5 aus Events 1–8 plus Finale (Event 9)"
         : "Wertung: beste 4 Ergebnisse"}
     </div>`;
 
